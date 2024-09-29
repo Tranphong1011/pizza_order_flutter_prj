@@ -13,23 +13,21 @@ class FirebaseUserRepo implements UserRepository {
   }) : _firebaseAuth = firebaseAuth ?? FirebaseAuth.instance;
 
   @override
-  Future<void> logOut() {
-    // TODO: implement logOut
-    throw UnimplementedError();
+  Future<void> logOut() async {
+    await _firebaseAuth.signOut();
   }
 
   @override
-  Future<void> setUserData(user) {
-    // TODO: implement setUserData
-    throw UnimplementedError();
+  Future<void> setUserData(MyUser user) async {
+    try {
+      await usersCollection.doc(user.userId).set(user.toEntity().toDocument());
+    } catch (e) {
+      log(e.toString());
+      rethrow;
+    }
   }
 
   @override
-  // Future<void> signIn(String email, String password) {
-  //   // TODO: implement signIn
-  //   throw UnimplementedError();
-  // }
-
   Future<void> signIn(String email, String password) async {
     try {
       await _firebaseAuth.signInWithEmailAndPassword(
